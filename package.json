@@ -1,0 +1,19 @@
+{
+  "name": "social-matrix",
+  "version": "1.0.0",
+  "description": "Social media feeds displayed in Matrix style",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kevinlmh/social-matrix.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kevinlmh/social-matrix/issues"
+  },
+  "homepage": "https://github.com/kevinlmh/social-matrix#readme"
+}
