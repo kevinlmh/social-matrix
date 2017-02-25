@@ -1,0 +1,20 @@
+<html>
+<head>
+    <title>socket</title>    
+</head>
+<body>
+    <ul id="list"></ul>
+    <script src="./socket.io.js"></script>
+    <script>
+        var socket = io.connect("http://localhost:3000");
+
+        socket.on('tweet', function(data){
+            console.log(data);
+            var ul = document.getElementById("list");
+            var li = document.createElement("li");
+            li.appendChild(document.createTextNode(data.message));
+            ul.appendChild(li);
+        });
+    </script>
+</body>
+</html>

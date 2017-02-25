@@ -18,6 +18,7 @@
   "homepage": "https://github.com/kevinlmh/social-matrix#readme",
   "dependencies": {
     "express": "^4.14.1",
+    "socket.io": "^1.7.3",
     "twitter": "^1.7.0"
   }
 }
