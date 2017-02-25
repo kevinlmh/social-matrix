@@ -15,5 +15,9 @@
   "bugs": {
     "url": "https://github.com/kevinlmh/social-matrix/issues"
   },
-  "homepage": "https://github.com/kevinlmh/social-matrix#readme"
+  "homepage": "https://github.com/kevinlmh/social-matrix#readme",
+  "dependencies": {
+    "express": "^4.14.1",
+    "twitter": "^1.7.0"
+  }
 }
