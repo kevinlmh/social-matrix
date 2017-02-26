@@ -47,42 +47,10 @@
     <ul id="list"></ul>
 
     <script src="./socket.io.js"></script>
+    <script src="./client.js"></script>
     
     <script>
-        var socket = io.connect("http://localhost:3000");
-        var divs = [];
-        var bitRowMap = new Array(20).fill(0);
-        var divid = 0;
-        var rowNum; 
-        socket.on('tweet', function(data){
-            // console.log(data);
-            if (Math.random() > 0.97) {
-
-                var div = document.createElement("div");
-                div.setAttribute("class", "tweet");
-                div.setAttribute("id", divid = divid++ % 30);
-      
-                div.appendChild(document.createTextNode(data.message));
-                
-                do {
-                    rowNum = (Math.round(Math.random() * 20));
-                } while (bitRowMap[rowNum] == 1);
-
-                div.style.top = Math.round(rowNum * 5)+ "%";
-                bitRowMap[rowNum] = 1;
-                divs.push((divid, rowNum));
-                console.log(bitRowMap);
-
-                div.style.left = (Math.round(Math.random() * 100)) + "%";
-                $("body").append(div);
-                
-                while (divs.length > 30) {
-                    var divRemoved = divs.shift();
-                    $("#" + divRemoved[0]).remove();
-                    bitRowMap[divRemoved[1]] = 0;
-                }
-            }
-        });
+       
     </script>
 
     <script defer src="https://code.jquery.com/jquery-3.1.1.min.js"  crossorigin="anonymous"></script>
@@ -90,6 +58,15 @@
     <script defer src="socket.io.js"></script>
     <script defer src="flyingtweets.js"></script> 
 </body>
+<footer>
+     <div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect footer">
+      <div class="mdl-tabs__tab-bar">
+        <li><a href="#">Help</a>
+        <li><a href="#">Privacy and Terms</a></li>
+        <li><a href="#">User Agreement</a></li>
+      </div>
+    </div>
+</footer>
 </html>
 
 

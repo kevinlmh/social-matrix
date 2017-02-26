@@ -12,6 +12,8 @@ div.tweet {
     font-weight: bold;
 }
 
+
+
 div.canvas {
     height:100%;
     width:100%;
@@ -29,6 +31,16 @@ div.canvas {
 	0% { opacity: 1; }
 	85% { opacity: 0.6; }
     100% { left: 0% ; opacity: 0; }
+}
+
+.footer {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    padding: 1rem;
+    background-color: #efefef;
+    text-align: center;
 }
 
 /*

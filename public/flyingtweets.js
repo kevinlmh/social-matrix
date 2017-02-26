@@ -1,25 +1,44 @@
 // Entry
+
 $( document ).ready(function() {
     var socket = io.connect("http://localhost:3000");
-    var height = 0;
-    var keywordCount = 0;
+    
+    httpGetAsync('/trending', )
+
+    var divs = [];
+    var bitRowMap = new Array(20).fill(0);
+    var divid = 0;
+    var rowNum; 
 
     socket.on('tweet', function(data){
         console.log(data);
-        var $newbutton = $("<div/>")   // creates a div element
-                .addClass("tweet")
-                .html(data.message);
-        $newbutton.css("left", "1200px");
-        $newbutton.css("top", Math.round(Math.random() * 60) * 10 + "px");
+        if (Math.random() > 0.97) {
 
-        // var div = document.createElement("button");
-        // div.appendChild(document.createTextNode(data.message));
-        // div.style.left = "1200px";
-        // // div.style.top = Math.round(Math.random() * 60) * 10 + "px";
-        // newbutton.style.left = "1200px";
-        // newbutton.style.top = Math.round(Math.random() * 60) * 10 + "px";
-        $("body").append($newbutton);
-    });
+            var div = document.createElement("div");
+            div.setAttribute("class", "tweet");
+            div.setAttribute("id", divid = divid++ % 30);
+
+            div.appendChild(document.createTextNode(data.message));
+
+            do {
+                rowNum = (Math.round(Math.random() * 20));
+            } while (bitRowMap[rowNum] == 1);
+
+            div.style.top = Math.round(rowNum * 5)+ "%";
+            bitRowMap[rowNum] = 1;
+            divs.push((divid, rowNum));
+            console.log(bitRowMap);
+
+            div.style.left = (Math.round(Math.random() * 100)) + "%";
+            $("canvas mdl-grid").append(div);
+
+            while (divs.length > 30) {
+                var divRemoved = divs.shift();
+                $("#" + divRemoved[0]).remove();
+                bitRowMap[divRemoved[1]] = 0;
+            }
+        }
+    }); 
 
     $("#keywordform").submit(function(e) {
         // console.log("add keyword");
@@ -39,8 +58,6 @@ $( document ).ready(function() {
         )
         e.preventDefault(); // avoid to execute the actual submit of the form.
     });
-
-
 
     $(".delkeyword").click(function(e) {
         console.log("x clicked");
