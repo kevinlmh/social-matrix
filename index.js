@@ -22,7 +22,7 @@ io.on('connection', function(){
 });
 
 // You can also get the stream in a callback if you prefer. 
-client.stream('statuses/filter', {track: 'trump'}, function(stream) {
+client.stream('statuses/filter', {track: 'intel'}, function(stream) {
   stream.on('data', function(data) {
     //console.log(data.text);
     io.emit('tweet', {'message': data.text});
@@ -33,9 +33,11 @@ client.stream('statuses/filter', {track: 'trump'}, function(stream) {
   });
 });
 
-// app.get('/', function (req, res) {
-//   res.render('')
-// })
+app.get('/', function (req, res) {
+  res.end("Hello world");
+})
+
+// app.listen(3000);
 
 server.listen(3000, function() {
     console.log('Example app listening on port 3000!');
