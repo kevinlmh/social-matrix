@@ -1,6 +1,9 @@
+a {
+    text-decoration: none !important;
+}
+
 div.tweet {
     white-space:nowrap;
-    /* width: 100%; */
     text-align: right;
     float: left;
     position: absolute;
@@ -16,14 +19,14 @@ div.tweet {
 @-webkit-keyframes flyleft {
 	0% { opacity: 1; }
 	85% { opacity: 0.6; }
-    100% { left: -1000; opacity: 0; }
+    100% { left: -1000px; opacity: 0; }
 }
 
 /* Standard syntax */
 @keyframes flyleft {
 	0% { opacity: 1; }
 	85% { opacity: 0.6; }
-    100% { left: -1000; opacity: 0; }
+    100% { left: -1000px; opacity: 0; }
 }
 
 .footer {

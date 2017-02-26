@@ -1,42 +1,42 @@
 // Entry
 
-$( document ).ready(function() {
-    var socket = io.connect("http://localhost:3000");
-    
-    var divs = [];
-    var bitRowMap = new Array(20).fill(0);
-    var divid = 0;
-    var rowNum; 
+// $( document ).ready(function() {
+//     var socket = io.connect("http://localhost:3000");
 
-    socket.on('tweet', function(data){
-        console.log(data);
-        if (Math.random() > 0.97) {
+//     var divs = [];
+//     var bitRowMap = new Array(20).fill(0);
+//     var divid = 0;
+//     var rowNum; 
 
-            var div = document.createElement("div");
-            div.setAttribute("class", "tweet");
-            div.setAttribute("id", divid = divid++ % 30);
+//     socket.on('tweet', function(data){
+//         console.log(data);
+//         if (Math.random() > 0.97) {
 
-            div.appendChild(document.createTextNode(data.message));
+//             var div = document.createElement("div");
+//             div.setAttribute("class", "tweet");
+//             div.setAttribute("id", divid = divid++ % 30);
 
-            do {
-                rowNum = (Math.round(Math.random() * 20));
-            } while (bitRowMap[rowNum] == 1);
+//             div.appendChild(document.createTextNode(data.message));
 
-            div.style.top = Math.round(rowNum * 5)+ "%";
-            bitRowMap[rowNum] = 1;
-            divs.push((divid, rowNum));
-            console.log(bitRowMap);
+//             do {
+//                 rowNum = (Math.round(Math.random() * 20));
+//             } while (bitRowMap[rowNum] == 1);
 
-            div.style.left = (Math.round(Math.random() * 100)) + "%";
-            $("canvas mdl-grid").append(div);
+//             div.style.top = Math.round(rowNum * 5)+ "%";
+//             bitRowMap[rowNum] = 1;
+//             divs.push((divid, rowNum));
+//             console.log(bitRowMap);
 
-            while (divs.length > 30) {
-                var divRemoved = divs.shift();
-                $("#" + divRemoved[0]).remove();
-                bitRowMap[divRemoved[1]] = 0;
-            }
-        }
-    }); 
+//             div.style.left = (Math.round(Math.random() * 100)) + "%";
+//             $("canvas mdl-grid").append(div);
+
+//             while (divs.length > 30) {
+//                 var divRemoved = divs.shift();
+//                 $("#" + divRemoved[0]).remove();
+//                 bitRowMap[divRemoved[1]] = 0;
+//             }
+//         }
+//     }); 
 
 var keywordCount = 0;
 
@@ -64,7 +64,7 @@ $(document).ready(function() {
             $('<a/>').attr('href', tweet.link).attr('target', "_blank").html(tweet.text));
 
         $newbutton.css("left", width);
-        $newbutton.css("top", randIntInRange(0, Math.floor(height/10)) * 10 + 100 + "px");
+        $newbutton.css("top", randIntInRange(0, Math.floor(height-200/10)) * 10 + 100 + "px");
 
         // var div = document.createElement("button");
         // div.appendChild(document.createTextNode(tweet.message));
@@ -90,9 +90,6 @@ $(document).ready(function() {
         e.preventDefault(); // avoid to execute the actual submit of the form.
         // socket.emit('startstream');
     });
-
-    $(".delkeyword").click(function(e) {
-        console.log("x clicked");
     
     $(document).on("click", ".delkeyword", function(e) {
         var url = "http://localhost/keywords";
