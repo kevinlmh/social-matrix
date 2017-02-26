@@ -20,15 +20,15 @@ $(document).ready(function() {
     )
 
     // get trending keywords
-    $.get(
-        baseUrl + "/trends",
-        {},
-        function(keywords) {
-            for (i = 0; i < 10; i++) {
-                addTrending(keywords[i]);
-            }
-        }
-    )
+    // $.get(
+    //     baseUrl + "/trends",
+    //     {},
+    //     function(keywords) {
+    //         for (i = 0; i < 10; i++) {
+    //             addTrending(keywords[i]);
+    //         }
+    //     }
+    // )
 
     socket.on('tweet', function(tweet){
         console.log(tweet);
