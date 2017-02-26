@@ -56,10 +56,16 @@ function beginStream() {
   }); 
 }
 
-
 //app.get('/', function (req, res) {
 // res.render('')
 // })
+// You can also get the stream in a callback if you prefer. 
+
+app.get('/', function (req, res) {
+  res.end("Hello world");
+})
+
+// app.listen(3000);
 
 server.listen(3000, function() {
     console.log('Example app listening on port 3000!');
