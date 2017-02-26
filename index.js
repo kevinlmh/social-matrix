@@ -18,20 +18,48 @@ var client = new Twitter({
 var io = require('socket.io')(server);
 io.on('connection', function(){
     console.log("a socket connection");
-    io.emit('tweet', {'message':"hello"});
+    // io.emit('tweet', {'message':"hello"});
 });
 
+var minutes = 5, trendInterval = minutes * 60 * 1000;
+var trendList = []; 
+
+var streamBegan = false;
+
+setInterval(
+  client.get('trends/place', { id: 2450022 }, function(error, json, response) {
+    if (error) throw error;
+    
+    var trends = json[0].trends;
+    for (var i = 0; i < trends.length; i++) {
+      trendList.push(trends[i].name.toString());
+    }
+    if (!streamBegan) {
+      beginStream();
+      streamBegan = true;
+    }
+  })
+  , trendInterval
+);
+
+// You can also get the stream in a callback if you prefer.
+function beginStream() {
+  client.stream('statuses/filter', { track: trendList.join(',') }, function(stream) {
+    stream.on('data', function(data) {
+      //console.log(data.text);
+      io.emit('tweet', {'message': data.text});
+    });
+   
+    stream.on('error', function(error) {
+      throw error; 
+    });
+  }); 
+}
+
+//app.get('/', function (req, res) {
+// res.render('')
+// })
 // You can also get the stream in a callback if you prefer. 
-client.stream('statuses/filter', {track: 'intel'}, function(stream) {
-  stream.on('data', function(data) {
-    //console.log(data.text);
-    io.emit('tweet', {'message': data.text});
-  });
- 
-  stream.on('error', function(error) {
-    throw error; 
-  });
-});
 
 app.get('/', function (req, res) {
   res.end("Hello world");
