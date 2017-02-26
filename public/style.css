@@ -1,17 +1,53 @@
 div.tweet {
     white-space:nowrap;
-    width: 100%;
+    /* width: 100%; */
+    text-align: right;
+    float: left;
     position: absolute;
-    -webkit-animation: flyleft 20s linear 10s ; /* Safari 4.0 - 8.0 */
-    animation: flyleft 20s linear 10s ;
+    -webkit-animation: flyleft 25s; /* Safari 4.0 - 8.0 */
+    animation: flyleft 25s;
+    display: flex;
+    overflow: hidden;
+    font-size: 25px;
+    font-weight: bold;
 }
 
 /* Safari 4.0 - 8.0 */
 @-webkit-keyframes flyleft {
-    100% {left: -1000px;}
+	0% { opacity: 1; }
+	85% { opacity: 0.6; }
+    100% { left: -1000; opacity: 0; }
 }
 
 /* Standard syntax */
 @keyframes flyleft {
-    100% { left: -1000px;}
+	0% { opacity: 1; }
+	85% { opacity: 0.6; }
+    100% { left: -1000; opacity: 0; }
 }
+
+.footer {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    padding: 1rem;
+    background-color: #efefef;
+    text-align: center;
+}
+
+/*
+.fadeOut{
+    border-radius: 8px;
+    box-shadow: silver 3px 3px 5px 0px;
+    border: 2px dashed yellow;
+    padding: 3px;
+}
+
+.fadeOut.end{
+    transition: all 10s ease-in-out;
+    box-shadow: none;
+    border: 0px dashed yellow;
+    border-radius: 0px;
+}
+*/

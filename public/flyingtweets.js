@@ -1,3 +1,43 @@
+// Entry
+
+$( document ).ready(function() {
+    var socket = io.connect("http://localhost:3000");
+    
+    var divs = [];
+    var bitRowMap = new Array(20).fill(0);
+    var divid = 0;
+    var rowNum; 
+
+    socket.on('tweet', function(data){
+        console.log(data);
+        if (Math.random() > 0.97) {
+
+            var div = document.createElement("div");
+            div.setAttribute("class", "tweet");
+            div.setAttribute("id", divid = divid++ % 30);
+
+            div.appendChild(document.createTextNode(data.message));
+
+            do {
+                rowNum = (Math.round(Math.random() * 20));
+            } while (bitRowMap[rowNum] == 1);
+
+            div.style.top = Math.round(rowNum * 5)+ "%";
+            bitRowMap[rowNum] = 1;
+            divs.push((divid, rowNum));
+            console.log(bitRowMap);
+
+            div.style.left = (Math.round(Math.random() * 100)) + "%";
+            $("canvas mdl-grid").append(div);
+
+            while (divs.length > 30) {
+                var divRemoved = divs.shift();
+                $("#" + divRemoved[0]).remove();
+                bitRowMap[divRemoved[1]] = 0;
+            }
+        }
+    }); 
+
 var keywordCount = 0;
 
 $(document).ready(function() {
@@ -51,6 +91,9 @@ $(document).ready(function() {
         // socket.emit('startstream');
     });
 
+    $(".delkeyword").click(function(e) {
+        console.log("x clicked");
+    
     $(document).on("click", ".delkeyword", function(e) {
         var url = "http://localhost/keywords";
         $.ajax({
