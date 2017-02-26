@@ -15,14 +15,28 @@ var client = new Twitter({
   access_token: '1069974536-qtR9DEEhCfciHd30EAPQBe9OLFqBeVRl2YO24Ke',
   access_token_secret: 'unhCgl9kPy8jMj0BNqIfOq3PhRFDgvJBp1kWmI8N4vNkG'
 });
+var indico = require('indico.io');
+indico.apiKey =  'cbae6d7efa18da846390496be664294b';
+
+var response = function(res) { console.log(res); }
+var logError = function(err) { console.log(err); }
+var calculateColor = function(res) {
+  return rgbToHex(Math.round(255-(255*res)), Math.round(255*res), Math.round(25-20*res));
+}
+function rgbToHex(r, g, b) {
+    return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+}
  
 // use array to store keywords for now
 // I know this is really bad
 // will switch to a database later
 var keywords = [];
 var trends = [];
-var tweets = [];
+//var tweets = [];
 var currentStream;
+var lasttime = 0;
+var limiter = 1;
+var counter = 0;
 
 var io = require('socket.io')(server);
 io.on('connection', function(client){
@@ -45,16 +59,33 @@ function refreshStream() {
   if (currentStream)
     currentStream.stop();
   
-  currentStream = client.stream('statuses/filter', { track: keywords.join(',') });
+  currentStream = client.stream('statuses/filter', { track: keywords.join(','), language: 'en' });
   
   currentStream.on('tweet', function (tweet) {
-    // console.log(tweet);
-    var t = {
-      'text': tweet.text,
-      'link': "https://twitter.com/" + tweet.user.screen_name + "/status/"+tweet.id_str
+    if (counter % limiter == 0) {
+
+      indico.sentiment(tweet.text).then(function(result) {
+        var t = {
+          'text': tweet.text,
+          'link': "https://twitter.com/" + tweet.user.screen_name + "/status/"+tweet.id_str,
+          'color': calculateColor(result)
+        }
+        io.emit('tweet', t);
+      }).catch(logError);
+      counter++;
     }
-    tweets.push(t);
-    io.emit('tweet', t);
+    var newtime = new Date().getTime();
+    if (newtime-lasttime > 500) {
+        if (counter > 3) {
+            limiter += 1;
+        } else if (counter < 1) {
+            limiter = Math.max(limiter-1, 1);
+        }
+        console.log("counter: " + counter);
+        console.log("limiter: " + limiter);
+        counter = 0;
+        lasttime = newtime;
+    }
   });
 }
 
@@ -97,3 +128,4 @@ app.listen(80, function() {
 });
 
 server.listen(3000);
+

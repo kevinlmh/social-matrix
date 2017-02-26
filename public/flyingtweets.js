@@ -1,9 +1,5 @@
 var keywordCount = 0;
 var height, width;
-var counter = 0;
-var mod = 1;
-
-var lastTime = new Date().getTime();
 
 $(document).ready(function() {
     var socket = io.connect("http://localhost:3000");
@@ -26,18 +22,7 @@ $(document).ready(function() {
     )
 
     socket.on('tweet', function(tweet){
-        if (counter % mod == 0) {
-            // do {
-            //     rowNum = (Math.round(Math.random() * 20));
-            // } while (bitRowMap[rowNum] == 1);
-            // $tweetdiv.css("top", Math.round(rowNum * 25)+ "px");
-            // bitRowMap[rowNum] = 1;
-            // divs.push((divid, rowNum));
-            // while (divs.length > 30) {
-            //     var divRemoved = divs.shift();
-            //     $("#" + divRemoved[0]).remove();
-            //     bitRowMap[divRemoved[1]] = 0;
-            // }
+        console.log(tweet);
             height = $(window).height();
             width = $(window).width();
 
@@ -45,27 +30,10 @@ $(document).ready(function() {
                 $('<a/>').attr('href', tweet.link).attr('target', "_blank").html(tweet.text));
 
             $tweetdiv.css("left", width);
-            $tweetdiv.css("top", randIntInRange(0, Math.floor((height-160)/25)) * 25 + 80 + "px");
-            $tweetdiv.css("color", getRandomColor());
+            // $tweetdiv.css("top", randIntInRange(0, Math.floor((height-100)/25)) * 25 + 80 + "px");
+            $tweetdiv.css("top", Math.round(Math.random()*(height-100) + 80) + "px");
+            $tweetdiv.css("color", tweet.color);
             $("body").append($tweetdiv);
-
-            counter++;
-        }
-
-        var newTime = new Date().getTime();
-        if (newTime-lastTime > 1000) {
-            console.log(newTime-lastTime);
-            console.log("counter " + counter);
-
-            if (counter > 5) {
-                mod *= 2;
-            } else {
-                // mod = Math.max(mod-1, 1);
-            }
-            counter = 0;
-            console.log("mod " + mod);
-            lastTime = newTime;
-        }
         
     });
 
