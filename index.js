@@ -1,12 +1,16 @@
 var express = require('express');
 var bodyparser = require('body-parser');
-var server = require('http').createServer(app);
 var _ = require('underscore');
 var status = require('http-status');
 var app = express();
 
 app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({ extended: true }));
+
+var server = app.listen(process.env.PORT, function() {
+    console.log('app listening on port '+ process.env.PORT);
+});
+
 
 var Twitter = require('twit');
 var client = new Twitter({
@@ -39,7 +43,7 @@ var lasttime = 0;
 var limiter = 1;
 var counter = 0;
 
-var io = require('socket.io')(server);
+var io = require('socket.io').listen(server);
 io.on('connection', function(client){
     console.log("a socket connection");
     client.on('startstream', function() {

@@ -1,16 +1,11 @@
 var keywordCount = 0;
 var height, width;
 
-var baseUrl = "https://twitterdanmaku.heroku.com";
+var baseUrl = "http://twitterdanmaku.heroku.com";
 
 $(document).ready(function() {
-    var socket = io.connect(baseUrl + ":3000");
+    var socket = io.connect(baseUrl);
     var height = 0;
-
-    var divs = [];
-    var bitRowMap = new Array(20).fill(0);
-    var divid = 0;
-    var rowNum; 
 
     // get previous keywords
     $.get(
