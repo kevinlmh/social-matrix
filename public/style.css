@@ -1,4 +1,4 @@
-div {
+div.tweet {
     white-space:nowrap;
     /* width: 100%; */
     text-align: right;
@@ -10,6 +10,11 @@ div {
     overflow: hidden;
     font-size: 25px;
     font-weight: bold;
+}
+
+div.canvas {
+    height:100%;
+    width:100%;
 }
 
 /* Safari 4.0 - 8.0 */

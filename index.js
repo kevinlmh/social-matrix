@@ -1,6 +1,11 @@
-var express = require('express')
+var express = require('express');
+var bodyparser = require('body-parser');
 var server = require('http').createServer(app);
-var app = express()
+var _ = require('underscore');
+var app = express();
+
+app.use(bodyparser.json());
+app.use(bodyparser.urlencoded({ extended: true}));
 
 var Twitter = require('twitter');
 var client = new Twitter({
@@ -10,63 +15,82 @@ var client = new Twitter({
   access_token_secret: 'unhCgl9kPy8jMj0BNqIfOq3PhRFDgvJBp1kWmI8N4vNkG'
 });
  
-// use array to store tweets for noew
+// use array to store keywords for now
 // I know this is really bad
 // will switch to a database later
-//var tweets = [];
+var keywords = [];
 
 var io = require('socket.io')(server);
 io.on('connection', function(){
     console.log("a socket connection");
-    // io.emit('tweet', {'message':"hello"});
 });
 
-var minutes = 5, trendInterval = minutes * 60 * 1000;
-var trendList = []; 
+// var minutes = 5, trendInterval = minutes * 60 * 1000;
+// var trendList = []; 
 
-var streamBegan = false;
+// var streamBegan = false;
 
-setInterval(
-  client.get('trends/place', { id: 2450022 }, function(error, json, response) {
-    if (error) throw error;
+// setInterval(
+//   client.get('trends/place', { id: 2450022 }, function(error, json, response) {
+//     if (error) throw error;
     
-    var trends = json[0].trends;
-    for (var i = 0; i < trends.length; i++) {
-      trendList.push(trends[i].name.toString());
-    }
-    if (!streamBegan) {
-      beginStream();
-      streamBegan = true;
-    }
-  })
-  , trendInterval
-);
+//     var trends = json[0].trends;
+//     for (var i = 0; i < trends.length; i++) {
+//       trendList.push(trends[i].name.toString());
+//     }
+//     if (!streamBegan) {
+//       beginStream();
+//       streamBegan = true;
+//     }
+//   })
+//   , trendInterval
+// );
+
+app.use(function(req, res, next) {  
+      res.header('Access-Control-Allow-Origin', req.headers.origin);
+      res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+      next();
+ });  
 
 // You can also get the stream in a callback if you prefer.
 function beginStream() {
-  client.stream('statuses/filter', { track: trendList.join(',') }, function(stream) {
+  client.stream('statuses/filter', { track: keywords.join(',') }, function(stream) {
     stream.on('data', function(data) {
-      //console.log(data.text);
       io.emit('tweet', {'message': data.text});
     });
-   
+
     stream.on('error', function(error) {
       throw error; 
     });
   }); 
 }
 
-//app.get('/', function (req, res) {
-// res.render('')
-// })
-// You can also get the stream in a callback if you prefer. 
-
-app.get('/', function (req, res) {
-  res.end("Hello world");
-})
-
-// app.listen(3000);
-
-server.listen(3000, function() {
-    console.log('Example app listening on port 3000!');
+// us id: 2450022
+app.get('/trends', function(req, res) {
+  var trendList = [];
+  client.get('trends/place', { id:  1}, function(error, json, response) {
+    if (error) throw error;
+    var trendList = [];
+    _.each(json[0].trends, function(trend) {
+      trendList.push(trend.name);
+    });
+    res.send(trendList);
+  });
 });
+
+app.post('/keywords', function(req, res) {
+  console.log(req.body.keyword);
+  keywords.push(req.body.keyword);
+  res.status(201);
+  res.end();
+});
+
+app.get('/keywords', function(req, res) {
+    res.status(200).send(keywords).end();
+});
+
+app.listen(80, function() {
+    console.log('app listening on port 80');
+});
+
+server.listen(3000);
