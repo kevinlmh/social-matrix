@@ -37,21 +37,21 @@ $( document ).ready(function() {
                 $("#keyword").val("");
             }
         )
+
         e.preventDefault(); // avoid to execute the actual submit of the form.
     });
 
 
-
-    $(".delkeyword").click(function(e) {
-        console.log("x clicked");
+    $(document).on("click", ".delkeyword", function(e) {
         var url = "http://localhost/keywords";
         $.ajax({
             url: url,
             type: 'DELETE',
             data:  {'keyword': $("#keyword").val()},
             success: function(result) {
-                console.log(e);
             }
         });
+        $(this).parent().remove();
     });
+
 });
