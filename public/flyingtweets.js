@@ -40,6 +40,42 @@ $( document ).ready(function() {
         }
     }); 
 
+var keywordCount = 0;
+
+$(document).ready(function() {
+    var socket = io.connect("http://localhost:3000");
+    var height = 0;
+
+ 
+    $.get(
+        "http://localhost/keywords", 
+        {'keyword': $("#keyword").val()},
+        function(keywords) {
+            console.log(keywords);
+            for (i = 0; i < keywords.length; i++) {
+                addKeywordChip(keywords[i]);
+            }
+        }
+    )
+
+    socket.on('tweet', function(data){
+        console.log(data);
+        var height = $("#canvas").height();
+        var width = $("#canvas").width();
+
+        var $newbutton = $("<div/>").addClass("tweet").html(data.message);
+        $newbutton.css("left", width);
+        $newbutton.css("top", Math.round(Math.random() * 60) * 10 + "px");
+
+        // var div = document.createElement("button");
+        // div.appendChild(document.createTextNode(data.message));
+        // div.style.left = "1200px";
+        // // div.style.top = Math.round(Math.random() * 60) * 10 + "px";
+        newbutton.style.left = "1200px";
+        newbutton.style.top = randIntInRange(0, Math.floor(height/10)) * 10 + "px";
+        $("body").append($newbutton);
+    });
+
     $("#keywordform").submit(function(e) {
         // console.log("add keyword");
         var url = "http://localhost/keywords";
@@ -48,11 +84,7 @@ $( document ).ready(function() {
             {'keyword': $("#keyword").val()},
             function(data) {
                 keywordCount = keywordCount + 1;
-                $("#keywordbar").append(
-                    $("<span/>").attr("id", "keyword"+keywordCount).addClass("mdl-chip mdl-chip--deletable").append(
-                        $("<span/>").addClass("mdl-chip__text").html($("#keyword").val())
-                    ).append("<button type=\"button\" class=\"mdl-chip__action delkeyword\"><i class=\"material-icons\">cancel</i></button>")
-                )
+                addKeywordChip($("#keyword").val());
                 $("#keyword").val("");
             }
         )
@@ -61,14 +93,29 @@ $( document ).ready(function() {
 
     $(".delkeyword").click(function(e) {
         console.log("x clicked");
+    
+    $(document).on("click", ".delkeyword", function(e) {
         var url = "http://localhost/keywords";
         $.ajax({
             url: url,
             type: 'DELETE',
-            data:  {'keyword': $("#keyword").val()},
+            data:  {'keyword': $(".mdl-chip__text", $(this).parent()).html()},
             success: function(result) {
-                console.log(e);
             }
         });
+        $(this).parent().remove();
     });
+
 });
+
+var randIntInRange = function(s, e) {
+    return Math.round(Math.random() * (e - s)) + s;
+}
+
+var addKeywordChip = function(keyword) {
+    $("#keywordbar").append(
+        $("<span/>").attr("id", "keyword"+keywordCount).addClass("mdl-chip mdl-chip--deletable").append(
+            $("<span/>").addClass("mdl-chip__text").html(keyword)
+        ).append("<button type=\"button\" class=\"mdl-chip__action delkeyword\"><i class=\"material-icons\">cancel</i></button>")
+    )
+}
