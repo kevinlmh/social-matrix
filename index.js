@@ -124,9 +124,11 @@ app.delete('/keywords', function(req, res) {
   refreshStream();
 })
 
-app.listen(80, function() {
-    console.log('app listening on port 80');
+app.listen(process.env.PORT, function() {
+    console.log('app listening on port process.env.PORT');
 });
 
-server.listen(3000);
+server.listen(3000, function() {
+    console.log('socket server listening on port 3000');
+});
 
