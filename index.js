@@ -125,7 +125,7 @@ app.delete('/keywords', function(req, res) {
 })
 
 app.listen(process.env.PORT, function() {
-    console.log('app listening on port process.env.PORT');
+    console.log('app listening on port '+ process.env.PORT);
 });
 
 server.listen(3000, function() {
