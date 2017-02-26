@@ -20,32 +20,13 @@ var client = new Twitter({
 // I know this is really bad
 // will switch to a database later
 var keywords = [];
+var trends = [];
+var tweets = [];
 
 var io = require('socket.io')(server);
 io.on('connection', function(){
     console.log("a socket connection");
 });
-
-// var minutes = 5, trendInterval = minutes * 60 * 1000;
-// var trendList = []; 
-
-// var streamBegan = false;
-
-// setInterval(
-//   client.get('trends/place', { id: 2450022 }, function(error, json, response) {
-//     if (error) throw error;
-    
-//     var trends = json[0].trends;
-//     for (var i = 0; i < trends.length; i++) {
-//       trendList.push(trends[i].name.toString());
-//     }
-//     if (!streamBegan) {
-//       beginStream();
-//       streamBegan = true;
-//     }
-//   })
-//   , trendInterval
-// );
 
 app.use(function(req, res, next) {  
       res.header('Access-Control-Allow-Origin', req.headers.origin);
@@ -58,6 +39,7 @@ app.use(function(req, res, next) {
 function beginStream() {
   client.stream('statuses/filter', { track: keywords.join(',') }, function(stream) {
     stream.on('data', function(data) {
+      tweets.push({'message': data.text});
       io.emit('tweet', {'message': data.text});
     });
 
@@ -69,14 +51,13 @@ function beginStream() {
 
 // us id: 2450022
 app.get('/trends', function(req, res) {
-  var trendList = [];
-  client.get('trends/place', { id:  1}, function(error, json, response) {
+  client.get('trends/place', { id:  2450022}, function(error, json, response) {
     if (error) throw error;
-    var trendList = [];
-    _.each(json[0].trends, function(trend) {
-      trendList.push(trend.name);
+    trends = [];
+    _.each(json[0].trends, function(t) {
+      trends.push(t.name);
     });
-    res.send(trendList);
+    res.send(trends);
   });
 });
 
@@ -91,10 +72,12 @@ app.get('/keywords', function(req, res) {
 
 app.delete('/keywords', function(req, res) {
   console.log(req.body.keyword);
-  for (var i = 0; i < keywords.length; i++) {
+  var i = 0;
+  while (i < keywords.length) {
     if (keywords[i] == req.body.keyword) {
-      delete keywords[i];
+       keywords.splice(i, 1);
     }
+    i = i+1;
   }
   res.status(status.OK).end();
 })
