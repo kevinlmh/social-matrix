@@ -1,9 +1,11 @@
 var express = require('express');
 var bodyparser = require('body-parser');
+var cors = require('cors')
 var _ = require('underscore');
 var status = require('http-status');
 var app = express();
 
+app.use(cors());
 app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({ extended: true }));
 
@@ -52,12 +54,12 @@ io.on('connection', function(client){
     });
 });
 
-app.use(function(req, res, next) {  
-      res.header('Access-Control-Allow-Origin', req.headers.origin);
-      res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-      res.header("Access-Control-Allow-Methods", "DELETE, GET, POST")
-      next();
- });  
+// app.use(function(req, res, next) {  
+//       res.header('Access-Control-Allow-Origin', req.headers.origin);
+//       res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+//       res.header("Access-Control-Allow-Methods", "DELETE, GET, POST")
+//       next();
+//  });  
 
 // You can also get the stream in a callback if you prefer.
 function refreshStream() {

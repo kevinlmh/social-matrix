@@ -19,6 +19,7 @@
   "homepage": "https://github.com/kevinlmh/social-matrix#readme",
   "dependencies": {
     "body-parser": "^1.16.1",
+    "cors": "^2.8.1",
     "express": "^4.14.1",
     "http-status": "^1.0.1",
     "indico.io": "^0.10.5",
