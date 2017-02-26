@@ -1,5 +1,13 @@
-a {
+a, u{
     text-decoration: none !important;
+    
+}
+
+a {
+    text-decoration: none;
+}
+a:link, a:visited {
+    color: inherit;
 }
 
 div.tweet {

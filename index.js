@@ -48,7 +48,7 @@ function refreshStream() {
   currentStream = client.stream('statuses/filter', { track: keywords.join(',') });
   
   currentStream.on('tweet', function (tweet) {
-    console.log(tweet);
+    // console.log(tweet);
     var t = {
       'text': tweet.text,
       'link': "https://twitter.com/" + tweet.user.screen_name + "/status/"+tweet.id_str
