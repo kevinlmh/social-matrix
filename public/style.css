@@ -2,21 +2,16 @@ div.tweet {
     white-space:nowrap;
     width: 100%;
     position: absolute;
-    -webkit-animation: myfirst 10s linear 2s ; /* Safari 4.0 - 8.0 */
-    animation: myfirst 20s linear 2s ;
-}
-
-div.canvas {
-    height:100%;
-    width:100%;
+    -webkit-animation: flyleft 20s linear 10s ; /* Safari 4.0 - 8.0 */
+    animation: flyleft 20s linear 10s ;
 }
 
 /* Safari 4.0 - 8.0 */
-@-webkit-keyframes myfirst {
-    100% {left:-1500px;}
+@-webkit-keyframes flyleft {
+    100% {left: -1000px;}
 }
 
 /* Standard syntax */
-@keyframes myfirst {
-    100% { left:-1500px;}
+@keyframes flyleft {
+    100% { left: -1000px;}
 }

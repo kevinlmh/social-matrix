@@ -6,13 +6,13 @@ var status = require('http-status');
 var app = express();
 
 app.use(bodyparser.json());
-app.use(bodyparser.urlencoded({ extended: true}));
+app.use(bodyparser.urlencoded({ extended: true }));
 
-var Twitter = require('twitter');
+var Twitter = require('twit');
 var client = new Twitter({
   consumer_key: 'D7FJRxEaDTfsIeINim3LfRh6L',
   consumer_secret: 'SmUDoSCH1lYZWF5wkGNut0aJ8ze2PE1NDNNhygQuQom9GPJ2Oc',
-  access_token_key: '1069974536-qtR9DEEhCfciHd30EAPQBe9OLFqBeVRl2YO24Ke',
+  access_token: '1069974536-qtR9DEEhCfciHd30EAPQBe9OLFqBeVRl2YO24Ke',
   access_token_secret: 'unhCgl9kPy8jMj0BNqIfOq3PhRFDgvJBp1kWmI8N4vNkG'
 });
  
@@ -22,10 +22,15 @@ var client = new Twitter({
 var keywords = [];
 var trends = [];
 var tweets = [];
+var currentStream;
 
 var io = require('socket.io')(server);
-io.on('connection', function(){
+io.on('connection', function(client){
     console.log("a socket connection");
+    client.on('startstream', function() {
+      console.log("start streaming");
+      refreshStream();
+    });
 });
 
 app.use(function(req, res, next) {  
@@ -36,17 +41,21 @@ app.use(function(req, res, next) {
  });  
 
 // You can also get the stream in a callback if you prefer.
-function beginStream() {
-  client.stream('statuses/filter', { track: keywords.join(',') }, function(stream) {
-    stream.on('data', function(data) {
-      tweets.push({'message': data.text});
-      io.emit('tweet', {'message': data.text});
-    });
-
-    stream.on('error', function(error) {
-      throw error; 
-    });
-  }); 
+function refreshStream() {
+  if (currentStream)
+    currentStream.stop();
+  
+  currentStream = client.stream('statuses/filter', { track: keywords.join(',') });
+  
+  currentStream.on('tweet', function (tweet) {
+    console.log(tweet);
+    var t = {
+      'text': tweet.text,
+      'link': "https://twitter.com/" + tweet.user.screen_name + "/status/"+tweet.id_str
+    }
+    tweets.push(t);
+    io.emit('tweet', t);
+  });
 }
 
 // us id: 2450022
@@ -64,6 +73,7 @@ app.get('/trends', function(req, res) {
 app.post('/keywords', function(req, res) {
   keywords.push(req.body.keyword);
   res.status(status.CREATED).end();
+  refreshStream();
 });
 
 app.get('/keywords', function(req, res) {
@@ -71,7 +81,6 @@ app.get('/keywords', function(req, res) {
 });
 
 app.delete('/keywords', function(req, res) {
-  console.log(req.body.keyword);
   var i = 0;
   while (i < keywords.length) {
     if (keywords[i] == req.body.keyword) {
@@ -80,6 +89,7 @@ app.delete('/keywords', function(req, res) {
     i = i+1;
   }
   res.status(status.OK).end();
+  refreshStream();
 })
 
 app.listen(80, function() {

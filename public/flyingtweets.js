@@ -4,7 +4,6 @@ $(document).ready(function() {
     var socket = io.connect("http://localhost:3000");
     var height = 0;
 
- 
     $.get(
         "http://localhost/keywords", 
         {'keyword': $("#keyword").val()},
@@ -16,21 +15,23 @@ $(document).ready(function() {
         }
     )
 
-    socket.on('tweet', function(data){
-        console.log(data);
-        var height = $("#canvas").height();
-        var width = $("#canvas").width();
+    socket.on('tweet', function(tweet){
+        console.log(tweet);
+        var height = $(window).height();
+        var width = $(window).width();
 
-        var $newbutton = $("<div/>").addClass("tweet").html(data.message);
+        var $newbutton = $("<div/>").addClass("tweet").append(
+            $('<a/>').attr('href', tweet.link).attr('target', "_blank").html(tweet.text));
+
         $newbutton.css("left", width);
-        $newbutton.css("top", Math.round(Math.random() * 60) * 10 + "px");
+        $newbutton.css("top", randIntInRange(0, Math.floor(height/10)) * 10 + 100 + "px");
 
         // var div = document.createElement("button");
-        // div.appendChild(document.createTextNode(data.message));
+        // div.appendChild(document.createTextNode(tweet.message));
         // div.style.left = "1200px";
         // // div.style.top = Math.round(Math.random() * 60) * 10 + "px";
-        newbutton.style.left = "1200px";
-        newbutton.style.top = randIntInRange(0, Math.floor(height/10)) * 10 + "px";
+        // $newbutton.style.left = "1200px";
+        // $newbutton.style.top = randIntInRange(0, Math.floor(height/10)) * 10 + "px";
         $("body").append($newbutton);
     });
 
@@ -47,6 +48,7 @@ $(document).ready(function() {
             }
         )
         e.preventDefault(); // avoid to execute the actual submit of the form.
+        // socket.emit('startstream');
     });
 
     $(document).on("click", ".delkeyword", function(e) {
@@ -59,6 +61,7 @@ $(document).ready(function() {
             }
         });
         $(this).parent().remove();
+        // socket.emit('startstream');
     });
 
 });
