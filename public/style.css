@@ -1,17 +1,43 @@
-button {
+div {
     white-space:nowrap;
-    width: 100%;
+    /* width: 100%; */
+    text-align: right;
+    float: left;
     position: absolute;
-    -webkit-animation: myfirst 10s linear 2s ; /* Safari 4.0 - 8.0 */
-    animation: myfirst 20s linear 2s ;
+    -webkit-animation: myfirst 25s; /* Safari 4.0 - 8.0 */
+    animation: myfirst 25s;
+    display: flex;
+    overflow: hidden;
+    font-size: 25px;
+    font-weight: bold;
 }
 
 /* Safari 4.0 - 8.0 */
 @-webkit-keyframes myfirst {
-    100% {left:-1500px;}
+	0% { opacity: 1; }
+	85% { opacity: 0.6; }
+    100% { left: 0%; opacity: 0; } /* -1500 px */ 
 }
 
 /* Standard syntax */
 @keyframes myfirst {
-    100% { left:-1500px;}
+	0% { opacity: 1; }
+	85% { opacity: 0.6; }
+    100% { left: 0% ; opacity: 0; }
 }
+
+/*
+.fadeOut{
+    border-radius: 8px;
+    box-shadow: silver 3px 3px 5px 0px;
+    border: 2px dashed yellow;
+    padding: 3px;
+}
+
+.fadeOut.end{
+    transition: all 10s ease-in-out;
+    box-shadow: none;
+    border: 0px dashed yellow;
+    border-radius: 0px;
+}
+*/

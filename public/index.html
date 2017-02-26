@@ -2,9 +2,13 @@
 <html>
 <head>
     <title>socket</title> 
+    <script
+    src="https://code.jquery.com/jquery-3.1.1.slim.min.js"
+    integrity="sha256-/SIrNqv8h6QGKDuNoLGA4iret+kyesCkHGzVUUV0shc="
+    crossorigin="anonymous"></script>
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-<link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
 </head>
 <body>
@@ -12,30 +16,42 @@
         <h3>test</h3>
     </div>
     <ul id="list"></ul>
-    <script
-  src="https://code.jquery.com/jquery-3.1.1.slim.min.js"
-  integrity="sha256-/SIrNqv8h6QGKDuNoLGA4iret+kyesCkHGzVUUV0shc="
-  crossorigin="anonymous"></script>
-      <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script> 
+
     <script src="./socket.io.js"></script>
+    
     <script>
         var socket = io.connect("http://localhost:3000");
-        var height = 0;
+        var divs = [];
+        var bitRowMap = new Array(20).fill(0);
+        var divid = 0;
+        var rowNum; 
         socket.on('tweet', function(data){
-            console.log(data);
-            var $newbutton = $("<button/>")   // creates a div element
-                 .addClass("mdl-button mdl-js-button")   // add a class
-                 .html(data.message);
-            $newbutton.css("left", "1200px");
-            $newbutton.css("top", Math.round(Math.random() * 60) * 10 + "px");
+            // console.log(data);
+            if (Math.random() > 0.97) {
 
-            // var div = document.createElement("button");
-            // div.appendChild(document.createTextNode(data.message));
-            // div.style.left = "1200px";
-            // // div.style.top = Math.round(Math.random() * 60) * 10 + "px";
-            // newbutton.style.left = "1200px";
-            // newbutton.style.top = Math.round(Math.random() * 60) * 10 + "px";
-            $("body").append($newbutton);
+                var div = document.createElement("div");
+                div.setAttribute("id", divid = divid++ % 30);
+      
+                div.appendChild(document.createTextNode(data.message));
+                
+                do {
+                    rowNum = (Math.round(Math.random() * 20));
+                } while (bitRowMap[rowNum] == 1);
+
+                div.style.top = Math.round(rowNum * 5)+ "%";
+                bitRowMap[rowNum] = 1;
+                divs.push((divid, rowNum));
+                console.log(bitRowMap);
+
+                div.style.left = (Math.round(Math.random() * 100)) + "%";
+                $("body").append(div);
+                
+                while (divs.length > 30) {
+                    var divRemoved = divs.shift();
+                    $("#" + divRemoved[0]).remove();
+                    bitRowMap[divRemoved[1]] = 0;
+                }
+            }
         });
     </script>
 
