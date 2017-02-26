@@ -10,13 +10,14 @@ app.use(bodyparser.urlencoded({ extended: true }));
 
 var Twitter = require('twit');
 var client = new Twitter({
-  consumer_key: 'D7FJRxEaDTfsIeINim3LfRh6L',
-  consumer_secret: 'SmUDoSCH1lYZWF5wkGNut0aJ8ze2PE1NDNNhygQuQom9GPJ2Oc',
-  access_token: '1069974536-qtR9DEEhCfciHd30EAPQBe9OLFqBeVRl2YO24Ke',
-  access_token_secret: 'unhCgl9kPy8jMj0BNqIfOq3PhRFDgvJBp1kWmI8N4vNkG'
+  consumer_key: process.env.TWITTER_CONSUMER_KEY,
+  consumer_secret: process.env.TWITTER_CONSUMER_SECRET,
+  access_token: process.env.TWITTER_ACCESS_TOKEN,
+  access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET
 });
+
 var indico = require('indico.io');
-indico.apiKey =  'cbae6d7efa18da846390496be664294b';
+indico.apiKey =  process.env.INDICO_API_KEY;
 
 var response = function(res) { console.log(res); }
 var logError = function(err) { console.log(err); }
