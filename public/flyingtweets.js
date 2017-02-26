@@ -2,6 +2,7 @@
 $( document ).ready(function() {
     var socket = io.connect("http://localhost:3000");
     var height = 0;
+    var keywordCount = 0;
 
     socket.on('tweet', function(data){
         console.log(data);
@@ -25,12 +26,32 @@ $( document ).ready(function() {
         var url = "http://localhost/keywords";
         $.post(
             url, 
-            "{ 'keyword': '" + $("#keyword").val() + "'}",
+            {'keyword': $("#keyword").val()},
             function(data) {
+                keywordCount = keywordCount + 1;
+                $("#keywordbar").append(
+                    $("<span/>").attr("id", "keyword"+keywordCount).addClass("mdl-chip mdl-chip--deletable").append(
+                        $("<span/>").addClass("mdl-chip__text").html($("#keyword").val())
+                    ).append("<button type=\"button\" class=\"mdl-chip__action delkeyword\"><i class=\"material-icons\">cancel</i></button>")
+                )
                 $("#keyword").val("");
             }
         )
         e.preventDefault(); // avoid to execute the actual submit of the form.
     });
 
+
+
+    $(".delkeyword").click(function(e) {
+        console.log("x clicked");
+        var url = "http://localhost/keywords";
+        $.ajax({
+            url: url,
+            type: 'DELETE',
+            data:  {'keyword': $("#keyword").val()},
+            success: function(result) {
+                console.log(e);
+            }
+        });
+    });
 });

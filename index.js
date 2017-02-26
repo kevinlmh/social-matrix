@@ -2,6 +2,7 @@ var express = require('express');
 var bodyparser = require('body-parser');
 var server = require('http').createServer(app);
 var _ = require('underscore');
+var status = require('http-status');
 var app = express();
 
 app.use(bodyparser.json());
@@ -49,6 +50,7 @@ io.on('connection', function(){
 app.use(function(req, res, next) {  
       res.header('Access-Control-Allow-Origin', req.headers.origin);
       res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+      res.header("Access-Control-Allow-Methods", "DELETE, GET, POST")
       next();
  });  
 
@@ -79,15 +81,23 @@ app.get('/trends', function(req, res) {
 });
 
 app.post('/keywords', function(req, res) {
-  console.log(req.body.keyword);
   keywords.push(req.body.keyword);
-  res.status(201);
-  res.end();
+  res.status(status.CREATED).end();
 });
 
 app.get('/keywords', function(req, res) {
-    res.status(200).send(keywords).end();
+    res.status(status.OK).send(keywords).end();
 });
+
+app.delete('/keywords', function(req, res) {
+  console.log(req.body.keyword);
+  for (var i = 0; i < keywords.length; i++) {
+    if (keywords[i] == req.body.keyword) {
+      delete keywords[i];
+    }
+  }
+  res.status(status.OK).end();
+})
 
 app.listen(80, function() {
     console.log('app listening on port 80');
