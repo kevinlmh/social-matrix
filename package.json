@@ -17,8 +17,10 @@
   },
   "homepage": "https://github.com/kevinlmh/social-matrix#readme",
   "dependencies": {
+    "body-parser": "^1.16.1",
     "express": "^4.14.1",
     "socket.io": "^1.7.3",
-    "twitter": "^1.7.0"
+    "twitter": "^1.7.0",
+    "underscore": "^1.8.3"
   }
 }
